@@ -1,0 +1,624 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+      "MATNR": {
+        "type": "string"
+      },
+      "ZDXG_YYBCEZNDR": {
+        "type": "string"
+      },
+      "ZDXG_YYBCEZNSO": {
+        "type": "string"
+      },
+      "ZDXG_YYKURZANGA": {
+        "type": "string"
+      },
+      "VKORG": {
+        "type": "string"
+      },
+      "CH_CLUST_KOND": {
+        "type": "object",
+        "properties": {
+          "ZLP0_1000": {
+            "type": "object",
+            "properties": {
+              "KSCHL": {
+                "type": "string"
+              },
+              "KOTABNR": {
+                "type": "string"
+              },
+              "VTWEG": {
+                "type": "string"
+              },
+              "#############": {
+                "type": "string"
+              },
+              "DATBI": {
+                "type": "string"
+              },
+              "DATAB": {
+                "type": "string"
+              },
+              "KSTBM": {
+                "type": "string"
+              },
+              "KBETR": {
+                "type": "string"
+              },
+              "KONWA": {
+                "type": "string"
+              },
+              "KPEIN": {
+                "type": "string"
+              },
+              "KMEIN": {
+                "type": "string"
+              },
+              "ZDXG_DATA_ORIGIN": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "KSCHL",
+              "KOTABNR",
+              "VTWEG",
+              "#############",
+              "DATBI",
+              "DATAB",
+              "KSTBM",
+              "KBETR",
+              "KONWA",
+              "KPEIN",
+              "KMEIN",
+              "ZDXG_DATA_ORIGIN"
+            ]
+          },
+          "ZLP0_RG": {
+            "type": "object",
+            "properties": {
+              "KSCHL": {
+                "type": "string"
+              },
+              "KOTABNR": {
+                "type": "string"
+              },
+              "VTWEG": {
+                "type": "string"
+              },
+              "#############": {
+                "type": "string"
+              },
+              "DATBI": {
+                "type": "string"
+              },
+              "DATAB": {
+                "type": "string"
+              },
+              "KSTBM": {
+                "type": "string"
+              },
+              "KBETR": {
+                "type": "string"
+              },
+              "KONWA": {
+                "type": "string"
+              },
+              "KPEIN": {
+                "type": "string"
+              },
+              "KMEIN": {
+                "type": "string"
+              },
+              "ZDXG_DATA_ORIGIN": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "KSCHL",
+              "KOTABNR",
+              "VTWEG",
+              "#############",
+              "DATBI",
+              "DATAB",
+              "KSTBM",
+              "KBETR",
+              "KONWA",
+              "KPEIN",
+              "KMEIN",
+              "ZDXG_DATA_ORIGIN"
+            ]
+          }
+        },
+        "required": [
+          "ZLP0_1000",
+          "ZLP0_RG"
+        ]
+      },
+      "CH_CLUST_MARD": {
+        "type": "object",
+        "properties": {
+          "N001": {
+            "type": "object",
+            "properties": {
+              "WERKS": {
+                "type": "string"
+              },
+              "ZDXG_LIFNR": {
+                "type": "string"
+              },
+              "ZDXG_LIFZ": {
+                "type": "string"
+              },
+              "ZDXG_MINBM": {
+                "type": "string"
+              },
+              "ZDXG_NORBM": {
+                "type": "string"
+              },
+              "ZDXG_MAXBM": {
+                "type": "string"
+              },
+              "ZDXG_STFBM": {
+                "type": "string"
+              },
+              "ZDXG_VPART": {
+                "type": "string"
+              },
+              "ZDXG_VPMNO": {
+                "type": "string"
+              },
+              "ZDXG_VPMGR": {
+                "type": "string"
+              },
+              "ZDXG_VPMEH": {
+                "type": "string"
+              },
+              "ZDXG_DATA_ORIGIN": {
+                "type": "string"
+              },
+              "LAND1": {
+                "type": "string"
+              },
+              "ZDXG_VLIEF": {
+                "type": "string"
+              },
+              "ZDXG_GENFLAG": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "WERKS",
+              "ZDXG_LIFNR",
+              "ZDXG_LIFZ",
+              "ZDXG_MINBM",
+              "ZDXG_NORBM",
+              "ZDXG_MAXBM",
+              "ZDXG_STFBM",
+              "ZDXG_VPART",
+              "ZDXG_VPMNO",
+              "ZDXG_VPMGR",
+              "ZDXG_VPMEH",
+              "ZDXG_DATA_ORIGIN",
+              "LAND1",
+              "ZDXG_VLIEF",
+              "ZDXG_GENFLAG"
+            ]
+          },
+          "N002": {
+            "type": "object",
+            "properties": {
+              "WERKS": {
+                "type": "string"
+              },
+              "ZDXG_LIFNR": {
+                "type": "string"
+              },
+              "ZDXG_LIFZ": {
+                "type": "string"
+              },
+              "ZDXG_MINBM": {
+                "type": "string"
+              },
+              "ZDXG_NORBM": {
+                "type": "string"
+              },
+              "ZDXG_MAXBM": {
+                "type": "string"
+              },
+              "ZDXG_STFBM": {
+                "type": "string"
+              },
+              "ZDXG_VPART": {
+                "type": "string"
+              },
+              "ZDXG_VPMNO": {
+                "type": "string"
+              },
+              "ZDXG_VPMGR": {
+                "type": "string"
+              },
+              "ZDXG_VPMEH": {
+                "type": "string"
+              },
+              "ZDXG_LIFZ_AA": {
+                "type": "string"
+              },
+              "ZDXG_DATA_ORIGIN": {
+                "type": "string"
+              },
+              "LAND1": {
+                "type": "string"
+              },
+              "ZDXG_GENFLAG": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "WERKS",
+              "ZDXG_LIFNR",
+              "ZDXG_LIFZ",
+              "ZDXG_MINBM",
+              "ZDXG_NORBM",
+              "ZDXG_MAXBM",
+              "ZDXG_STFBM",
+              "ZDXG_VPART",
+              "ZDXG_VPMNO",
+              "ZDXG_VPMGR",
+              "ZDXG_VPMEH",
+              "ZDXG_LIFZ_AA",
+              "ZDXG_DATA_ORIGIN",
+              "LAND1",
+              "ZDXG_GENFLAG"
+            ]
+          }
+        },
+        "required": [
+          "N001",
+          "N002"
+        ]
+      },
+      "CH_CLUST_MEAN": {
+        "type": "object",
+        "properties": {
+          "HE": {
+            "type": "object",
+            "properties": {
+              "EAN11": {
+                "type": "string"
+              },
+              "EANTP": {
+                "type": "string"
+              },
+              "HPEAN": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "EAN11",
+              "EANTP",
+              "HPEAN"
+            ]
+          },
+          "UC": {
+            "type": "object",
+            "properties": {
+              "EAN11": {
+                "type": "string"
+              },
+              "EANTP": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "EAN11",
+              "EANTP"
+            ]
+          }
+        },
+        "required": [
+          "HE",
+          "UC"
+        ]
+      },
+      "CH_CLUST_MARA": {
+        "type": "object",
+        "properties": {
+          "MTART": {
+            "type": "string"
+          },
+          "MBRSH": {
+            "type": "string"
+          },
+          "MATKL": {
+            "type": "string"
+          },
+          "MEINS": {
+            "type": "string"
+          },
+          "BRGEW": {
+            "type": "string"
+          },
+          "NTGEW": {
+            "type": "string"
+          },
+          "GEWEI": {
+            "type": "string"
+          },
+          "SPART": {
+            "type": "string"
+          },
+          "EXTWG": {
+            "type": "string"
+          },
+          "ZDXG_SORT_02": {
+            "type": "string"
+          },
+          "ZDXG_SORT_04": {
+            "type": "string"
+          },
+          "ZDXG_FDBGT": {
+            "type": "string"
+          },
+          "ZDXG_ABGEB": {
+            "type": "string"
+          },
+          "ZDXG_VERANTW": {
+            "type": "string"
+          },
+          "ZDXG_VERTRIEB": {
+            "type": "string"
+          },
+          "ZDXG_YYLASTUPD": {
+            "type": "string"
+          },
+          "ZDXG_YYMASCH": {
+            "type": "string"
+          },
+          "ZDXG_DATA_ORIGIN": {
+            "type": "string"
+          },
+          "ZDXG_0007": {
+            "type": "string"
+          },
+          "ZDXG_YYBCNORM": {
+            "type": "string"
+          },
+          "ZDXG_SWPFV": {
+            "type": "string"
+          },
+          "ERSDA": {
+            "type": "string"
+          },
+          "LAEDA": {
+            "type": "string"
+          },
+          "ZDXS_MARA_EXT1": {
+            "type": "object",
+            "properties": {
+              "ZDXG_PRODIS": {
+                "type": "string"
+              },
+              "ZDXG_TECH_PRDGR": {
+                "type": "string"
+              },
+              "ZDXG_MHAFR": {
+                "type": "string"
+              },
+              "LAENGE": {
+                "type": "string"
+              },
+              "BREITE": {
+                "type": "string"
+              },
+              "HOEHE": {
+                "type": "string"
+              },
+              "ZDXG_SENDE_ORGID": {
+                "type": "string"
+              },
+              "ZDXG_PRODV": {
+                "type": "string"
+              },
+              "ZDXG_FUEHRSPR": {
+                "type": "string"
+              },
+              "ZDXG_FUEHRSPR_LAISO": {
+                "type": "string"
+              },
+              "ZDXG_GG_FLAG": {
+                "type": "string"
+              },
+              "ZDXG_GG_HINW": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "ZDXG_PRODIS",
+              "ZDXG_TECH_PRDGR",
+              "ZDXG_MHAFR",
+              "LAENGE",
+              "BREITE",
+              "HOEHE",
+              "ZDXG_SENDE_ORGID",
+              "ZDXG_PRODV",
+              "ZDXG_FUEHRSPR",
+              "ZDXG_FUEHRSPR_LAISO",
+              "ZDXG_GG_FLAG",
+              "ZDXG_GG_HINW"
+            ]
+          }
+        },
+        "required": [
+          "MTART",
+          "MBRSH",
+          "MATKL",
+          "MEINS",
+          "BRGEW",
+          "NTGEW",
+          "GEWEI",
+          "SPART",
+          "EXTWG",
+          "ZDXG_SORT_02",
+          "ZDXG_SORT_04",
+          "ZDXG_FDBGT",
+          "ZDXG_ABGEB",
+          "ZDXG_VERANTW",
+          "ZDXG_VERTRIEB",
+          "ZDXG_YYLASTUPD",
+          "ZDXG_YYMASCH",
+          "ZDXG_DATA_ORIGIN",
+          "ZDXG_0007",
+          "ZDXG_YYBCNORM",
+          "ZDXG_SWPFV",
+          "ERSDA",
+          "LAEDA",
+          "ZDXS_MARA_EXT1"
+        ]
+      },
+      "CH_CLUST_MVKE": {
+        "type": "object",
+        "properties": {
+          "VTWEG": {
+            "type": "string"
+          },
+          "SKTOF": {
+            "type": "string"
+          },
+          "VMSTA": {
+            "type": "string"
+          },
+          "VMSTD": {
+            "type": "string"
+          },
+          "ZDXG_VGBK": {
+            "type": "string"
+          },
+          "ZDXG_VFGRP": {
+            "type": "string"
+          },
+          "ZDXG_LKZ01": {
+            "type": "string"
+          },
+          "ZDXG_LKZ19": {
+            "type": "string"
+          },
+          "ZDXG_PRKLA": {
+            "type": "string"
+          },
+          "ZDXG_EGHID": {
+            "type": "string"
+          },
+          "ZDXG_PRGRP_GG": {
+            "type": "string"
+          },
+          "ZDXG_MALL": {
+            "type": "string"
+          },
+          "ZDXG_RGGEW": {
+            "type": "string"
+          },
+          "ZDXG_M50FI": {
+            "type": "string"
+          },
+          "ZDXG_M55PA": {
+            "type": "string"
+          },
+          "ZDXG_M65VF": {
+            "type": "string"
+          },
+          "ZDXG_M80LF": {
+            "type": "string"
+          },
+          "ZDXG_M90AE": {
+            "type": "string"
+          },
+          "ZDXG_M91TS": {
+            "type": "string"
+          },
+          "ZDXG_M99MH": {
+            "type": "string"
+          },
+          "ZDXG_M100AK": {
+            "type": "string"
+          },
+          "ZDXG_BSPER": {
+            "type": "string"
+          },
+          "ZDXG_M55PA_FREI": {
+            "type": "string"
+          },
+          "ZDXG_M65VF_FREI": {
+            "type": "string"
+          },
+          "ZDXG_M80LF_FREI": {
+            "type": "string"
+          },
+          "ZDXG_DATA_ORIGIN": {
+            "type": "string"
+          },
+          "ZDXG_TIEFG": {
+            "type": "string"
+          },
+          "ZDXG_MALLDQ": {
+            "type": "string"
+          },
+          "ZDXG_BWARN": {
+            "type": "string"
+          },
+          "ZDXG_PRAUSG": {
+            "type": "string"
+          },
+          "ZDXG_DIV02L": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "VTWEG",
+          "SKTOF",
+          "VMSTA",
+          "VMSTD",
+          "ZDXG_VGBK",
+          "ZDXG_VFGRP",
+          "ZDXG_LKZ01",
+          "ZDXG_LKZ19",
+          "ZDXG_PRKLA",
+          "ZDXG_EGHID",
+          "ZDXG_PRGRP_GG",
+          "ZDXG_MALL",
+          "ZDXG_RGGEW",
+          "ZDXG_M50FI",
+          "ZDXG_M55PA",
+          "ZDXG_M65VF",
+          "ZDXG_M80LF",
+          "ZDXG_M90AE",
+          "ZDXG_M91TS",
+          "ZDXG_M99MH",
+          "ZDXG_M100AK",
+          "ZDXG_BSPER",
+          "ZDXG_M55PA_FREI",
+          "ZDXG_M65VF_FREI",
+          "ZDXG_M80LF_FREI",
+          "ZDXG_DATA_ORIGIN",
+          "ZDXG_TIEFG",
+          "ZDXG_MALLDQ",
+          "ZDXG_BWARN",
+          "ZDXG_PRAUSG",
+          "ZDXG_DIV02L"
+        ]
+      }
+    },
+    "required": [
+      "MATNR",
+      "ZDXG_YYBCEZNDR",
+      "ZDXG_YYBCEZNSO",
+      "ZDXG_YYKURZANGA",
+      "VKORG",
+      "CH_CLUST_KOND",
+      "CH_CLUST_MARD",
+      "CH_CLUST_MEAN",
+      "CH_CLUST_MARA",
+      "CH_CLUST_MVKE"
+    ]
+  }
