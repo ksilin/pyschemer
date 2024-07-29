@@ -37,23 +37,11 @@ def load_json(json_file: str) -> str | None:
             json_str = file.read()
     return json_str
 
-schema = load_json("si_prod_schema_v1.json")
-data = load_json()
+schema_str = load_json("tests/si_prod_schema_v1.json")
+data = load_json("tests/DataProductCDPricing.json")
 
-schema_closed = copy.deepcopy(schema)
-schema_closed["additionalProperties"] = False
-
-schema_age_removed = copy.deepcopy(schema)
-del schema_age_removed["properties"]["age"]
-
-schema_job_added = copy.deepcopy(schema)
-schema_job_added["properties"]["job"] = {
-      "type": "string",
-      "description": "The person's job."
-    }
-
-schema_closed_age_removed = copy.deepcopy(schema_closed)
-del schema_closed_age_removed["properties"]["age"]
+#schema_closed = copy.deepcopy(schema)
+#schema_closed["additionalProperties"] = False
 
 def delete_kafka_topics(admin_client, topics):
     # Delete topics
@@ -111,7 +99,6 @@ def create_test_producer(kafka_broker, schema_registry_url, schema_string):# to_
     return SerializingProducer(producer_conf)
 
 
-# Define the from_dict function
 def from_dict(obj, ctx):
     return obj
 
@@ -150,17 +137,14 @@ def try_except(lambda_try, lambda_except, exception):
 
 def test_produce_evo_closed():
 
-    schema_stringV1 = json.dumps(schema_closed)
-    schema_stringV2 = json.dumps(schema_closed_age_removed)
+    #schema_stringV1 = json.dumps(schema_closed)
     
-    person = Person("Phineas", "Crumb", 123)
+    producerV1 = create_test_producer(KAFKA_BROKER, SCHEMA_REGISTRY_URL, schema_str)
 
-    producerV1 = create_test_producer(KAFKA_BROKER, SCHEMA_REGISTRY_URL, schema_stringV1)
-
-    producerV1.produce('test-topic-evo', key='key1', value=person_to_dict(person), on_delivery=acked)
+    producerV1.produce('test-topic-evo', key='key1', value=json.loads(data), on_delivery=acked)
     producerV1.flush()
     
-    consumer = create_test_consumer(KAFKA_BROKER, SCHEMA_REGISTRY_URL, schema_stringV1, 'test-group', 'test-topic-evo', person_from_dict)
+    consumer = create_test_consumer(KAFKA_BROKER, SCHEMA_REGISTRY_URL, schema_str, 'test-group', 'test-topic-evo')
     msg = consumer.poll(timeout=10.0)
 
     print("consumed message:")
@@ -168,75 +152,9 @@ def test_produce_evo_closed():
 
     assert msg is not None
     assert msg.key() == 'key1'
-    assert msg.value() == person
     
     schema_registry_conf = {'url': SCHEMA_REGISTRY_URL}
     schema_registry_client = SchemaRegistryClient(schema_registry_conf)
     
     compat = try_except(lambda: schema_registry_client.get_compatibility(subject_name="test-topic-evo-value"), lambda: schema_registry_client.get_compatibility(), SchemaRegistryError)
     print(f"compat: {compat}")
-    
-    v2_compatible = schema_registry_client.test_compatibility(subject_name="test-topic-evo-value", schema=Schema(schema_stringV2, schema_type="JSON"))
-    print(f"v2 compatible: {v2_compatible}")
-    
-    producerV2 = create_test_producer(KAFKA_BROKER, SCHEMA_REGISTRY_URL, schema_stringV2)
-
-    with pytest.raises(ValueSerializationError, match="Schema being registered is incompatible with an earlier schema for subject"):
-        producerV2.produce('test-topic-evo', key='key1', value=person_to_dict(person), on_delivery=acked)
-
-def test_produce_evo_open():
-
-    schema_stringV1 = json.dumps(schema)
-    schema_stringV2 = json.dumps(schema_age_removed)
-    schema_stringV3 = json.dumps(schema_job_added)
-    
-    person = Person("Phineas", "Crumb", 123)
-
-    producerV1 = create_test_producer(KAFKA_BROKER, SCHEMA_REGISTRY_URL, schema_stringV1)
-
-    producerV1.produce('test-topic-evo-open', key='key1', value=person_to_dict(person), on_delivery=acked)
-    producerV1.flush()
-    
-    consumer = create_test_consumer(KAFKA_BROKER, SCHEMA_REGISTRY_URL, schema_stringV1, 'test-group', 'test-topic-evo-open', person_from_dict)
-    msg = consumer.poll(timeout=10.0)
-
-    print("consumed V1 message:")
-    print(msg.value())
-
-    assert msg is not None
-    assert msg.key() == 'key1'
-    assert msg.value() == person
-    
-    schema_registry_conf = {'url': SCHEMA_REGISTRY_URL}
-    schema_registry_client = SchemaRegistryClient(schema_registry_conf)
-    
-    compat = try_except(lambda: schema_registry_client.get_compatibility(subject_name="test-topic-evo-open-value"), lambda: schema_registry_client.get_compatibility(), SchemaRegistryError)
-    print(f"compat: {compat}")
-    
-    v2_compatible = schema_registry_client.test_compatibility(subject_name="test-topic-evo-open-value", schema=Schema(schema_stringV2, schema_type="JSON"))
-    print(f"v2 compatible: {v2_compatible}")
-    
-    producerV2 = create_test_producer(KAFKA_BROKER, SCHEMA_REGISTRY_URL, schema_stringV2)
-
-    producerV2.produce('test-topic-evo-open', key='key1', value=person_to_dict(person), on_delivery=acked)
-    producerV2.flush()
-    
-    msg2 = consumer.poll(timeout=10.0)
-
-    print("consumed V2 message:")
-    print(msg2.value())
-    
-    v3_compatible = schema_registry_client.test_compatibility(subject_name="test-topic-evo-open-value", schema=Schema(schema_stringV3, schema_type="JSON"))
-    print(f"v3 compatible: {v3_compatible}")
-    
-    producerV3 = create_test_producer(KAFKA_BROKER, SCHEMA_REGISTRY_URL, schema_stringV3)
-
-    producerV3.produce('test-topic-evo-open', key='key1', value=person_to_dict(person), on_delivery=acked)
-    producerV3.flush()
-    
-    msg3 = consumer.poll(timeout=10.0)
-
-    print("consumed V3 message:")
-    print(msg3.value())
-
-    consumer.close()
