@@ -13,6 +13,7 @@ from confluent_kafka.schema_registry import (
     SchemaRegistryError,
 )
 from confluent_kafka.schema_registry.json_schema import JSONDeserializer, JSONSerializer
+from confluent_kafka.schema_registry.avro import AvroSerializer, AvroDeserializer
 from confluent_kafka.serialization import StringDeserializer, StringSerializer
 from confluent_kafka import DeserializingConsumer, KafkaError, Message
 
@@ -41,19 +42,31 @@ def create_kafka_topics(admin_client, topics):
 def clear_schema_registry_subjects(schema_registry_conf, subjects):
     schema_registry_client = SchemaRegistryClient(schema_registry_conf)
     for subject in subjects:
-        deleted_versions = schema_registry_client.delete_subject(subject_name=subject, permanent=True)
-        print(f"Deleted following schema versions for subject {subject}: {deleted_versions}")
+        try:
+            deleted_versions = schema_registry_client.delete_subject(subject_name=subject, permanent=True)
+            print(f"Deleted following schema versions for subject {subject}: {deleted_versions}")
+        except SchemaRegistryError as e:
+            if e.error_code == 40401:  # Schema Registry code for subject not found
+                print(f"Subject '{subject}' not found. Skipping deletion.")
+            else:
+                print(f"Failed to delete subject '{subject}': {e}")
 
-def create_test_producer(producer_conf, schema_registry_conf, schema_string, to_dict=None, serializer_conf=None):
+def create_test_producer(producer_conf, schema_registry_conf, schema_string, serializer_class, to_dict=None, serializer_conf=None):
     schema_registry_client = SchemaRegistryClient(schema_registry_conf)
-    value_serializer = JSONSerializer(schema_str=schema_string, schema_registry_client=schema_registry_client, to_dict=to_dict, conf=serializer_conf)
+    value_serializer = serializer_class(schema_str=schema_string, schema_registry_client=schema_registry_client, to_dict=to_dict, conf=serializer_conf)
     producer_config = copy.deepcopy(producer_conf)
     producer_config['key.serializer'] = StringSerializer('utf_8')
     producer_config['value.serializer'] = value_serializer
 
     return SerializingProducer(producer_config)
 
-def create_test_consumer(client_conf, schema_registry_conf, schema_string, group_id, topic, from_dict = None):
+def create_test_producer_json_sr(producer_conf, schema_registry_conf, schema_string, to_dict=None, serializer_conf=None):
+    return create_test_producer(producer_conf, schema_registry_conf, schema_string, JSONSerializer, to_dict, serializer_conf)
+
+def create_test_producer_avro(producer_conf, schema_registry_conf, schema_string, to_dict=None, serializer_conf=None):
+    return create_test_producer(producer_conf, schema_registry_conf, schema_string, AvroSerializer, to_dict, serializer_conf)
+
+def create_test_consumer_json_sr(client_conf, schema_registry_conf, schema_string, group_id, topic, from_dict = None):
     schema_registry_client = SchemaRegistryClient(schema_registry_conf)
     value_deserializer = JSONDeserializer(schema_string, from_dict, schema_registry_client)
 

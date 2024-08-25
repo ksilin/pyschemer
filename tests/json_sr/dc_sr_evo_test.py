@@ -3,6 +3,13 @@ import inspect
 import json
 import logging
 
+import sys
+import os
+
+# Add the src directory to the sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../tests')))
+
 import pytest
 from confluent_kafka.admin import AdminClient
 from confluent_kafka.error import ValueSerializationError
@@ -12,14 +19,14 @@ from confluent_kafka.schema_registry import (
     SchemaRegistryError,
 )
 
-from src.py_json_sr_evo.person import Person
-from src.py_json_sr_evo.personAddedJob import PersonAddedJob
-from tests.test_utils import (
+from py_json_sr_evo.person import Person
+from py_json_sr_evo.personAddedJob import PersonAddedJob
+from test_utils import (
     acked,
     clear_schema_registry_subjects,
     create_kafka_topics,
-    create_test_consumer,
-    create_test_producer,
+    create_test_consumer_json_sr,
+    create_test_producer_json_sr,
     delete_consumer_groups,
     delete_kafka_topics,
     try_except,
@@ -120,13 +127,13 @@ def test_closed_model_remove_property_backward_incompatible():
 
     person = Person("Phineas", "Crumb", 123)
 
-    producerV1 = create_test_producer(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_stringV1)
+    producerV1 = create_test_producer_json_sr(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_stringV1)
     producerV1.produce(TOPIC_CLOSED, key='key1', value=person_to_dict(person), on_delivery=acked)
     producerV1.flush()
 
     consumer_group = f"test-group-{inspect.currentframe().f_code.co_name}"
     delete_consumer_groups(COMMON_CLIENT_CONF, [consumer_group])
-    consumer = create_test_consumer(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_stringV1, consumer_group, TOPIC_CLOSED, person_from_dict)
+    consumer = create_test_consumer_json_sr(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_stringV1, consumer_group, TOPIC_CLOSED, person_from_dict)
     msg = consumer.poll(timeout=10.0)
     assert msg is not None
     assert msg.key() == 'key1'
@@ -144,7 +151,7 @@ def test_closed_model_remove_property_backward_incompatible():
       schema_registry_client.register_schema(subject_name=SUBJECT_CLOSED, schema=Schema(schema_str=schema_string_age_removed, schema_type="JSON"),normalize_schemas=True)
 
 
-    producer_age_removed = create_test_producer(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_string_age_removed)
+    producer_age_removed = create_test_producer_json_sr(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_string_age_removed)
 
     with pytest.raises(ValueSerializationError, match="Schema being registered is incompatible with an earlier schema for subject"):
         producer_age_removed.produce(TOPIC_CLOSED, key='key1', value=person_to_dict(person), on_delivery=acked)
@@ -160,13 +167,13 @@ def test_closed_model_add_property_backward_compatible():
 
     person = Person("Phineas", "Crumb", 123)
 
-    producerV1 = create_test_producer(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_stringV1)
+    producerV1 = create_test_producer_json_sr(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_stringV1)
     producerV1.produce(TOPIC_CLOSED, key='key1', value=person_to_dict(person), on_delivery=acked)
     producerV1.flush()
 
     consumer_group = f"test-group-{inspect.currentframe().f_code.co_name}"
     delete_consumer_groups(COMMON_CLIENT_CONF, [consumer_group])
-    consumer = create_test_consumer(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_stringV1, consumer_group, TOPIC_CLOSED, person_from_dict)
+    consumer = create_test_consumer_json_sr(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_stringV1, consumer_group, TOPIC_CLOSED, person_from_dict)
     msg = consumer.poll(timeout=10.0)
     assert msg is not None
     assert msg.key() == 'key1'
@@ -181,7 +188,7 @@ def test_closed_model_add_property_backward_compatible():
     assert added_property_compatible is True
 
     personAddedJob = PersonAddedJob("Phineas", "Crumb", "assistant", 123)
-    producerAddedJob = create_test_producer(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_string_job_added)
+    producerAddedJob = create_test_producer_json_sr(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_string_job_added)
     producerAddedJob.produce(TOPIC_CLOSED, key='key1', value=person_job_added_to_dict(personAddedJob), on_delivery=acked)
     producerAddedJob.flush()
     msg = consumer.poll(timeout=10.0)
@@ -204,14 +211,14 @@ def test_open_model_remove_property_backward_incompatible():
 
     person = Person("Phineas", "Crumb", 123)
 
-    producerV1 = create_test_producer(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_stringV1)
+    producerV1 = create_test_producer_json_sr(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_stringV1)
 
     producerV1.produce(TOPIC_OPEN, key='key1', value=person_to_dict(person), on_delivery=acked)
     producerV1.flush()
 
     consumer_group = f"test-group-{inspect.currentframe().f_code.co_name}"
     delete_consumer_groups(COMMON_CLIENT_CONF, [consumer_group])
-    consumer = create_test_consumer(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_stringV1, consumer_group, TOPIC_OPEN, person_from_dict)
+    consumer = create_test_consumer_json_sr(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_stringV1, consumer_group, TOPIC_OPEN, person_from_dict)
     msg = consumer.poll(timeout=10.0)
     assert msg is not None
     assert msg.key() == 'key1'
@@ -227,7 +234,7 @@ def test_open_model_remove_property_backward_incompatible():
     with pytest.raises(SchemaRegistryError, match="A property or item is missing in the new schema but present at path '#/properties/age' in the old schema and is not covered by its partially open content model"):
       schema_registry_client.register_schema(subject_name=SUBJECT_OPEN, schema=Schema(schema_str=schema_string_age_removed, schema_type="JSON"),normalize_schemas=True)
 
-    producerV2 = create_test_producer(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_string_age_removed)
+    producerV2 = create_test_producer_json_sr(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_string_age_removed)
 
     # errorType:"PROPERTY_REMOVED_NOT_COVERED_BY_PARTIALLY_OPEN_CONTENT_MODEL", description:"A property or item is missing in the new schema but present at path '#/properties/age' in the old schema and is not covered by its partially open content model'
     with pytest.raises(ValueSerializationError, match="A property or item is missing in the new schema but present at path '#/properties/age' in the old schema and is not covered by its partially open content model"):
@@ -251,14 +258,14 @@ def test_open_model_add_property_backward_compatible():
 
     person = Person("Phineas", "Crumb", 123)
 
-    producerV1 = create_test_producer(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_stringV1)
+    producerV1 = create_test_producer_json_sr(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_stringV1)
 
     producerV1.produce(TOPIC_OPEN, key='key1', value=person_to_dict(person), on_delivery=acked)
     producerV1.flush()
 
     consumer_group = f"test-group-{inspect.currentframe().f_code.co_name}"
     delete_consumer_groups(COMMON_CLIENT_CONF, [consumer_group])
-    consumer = create_test_consumer(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_stringV1, consumer_group, TOPIC_OPEN, person_from_dict)
+    consumer = create_test_consumer_json_sr(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_stringV1, consumer_group, TOPIC_OPEN, person_from_dict)
     msg = consumer.poll(timeout=10.0)
     assert msg is not None
     assert msg.key() == 'key1'
@@ -274,7 +281,7 @@ def test_open_model_add_property_backward_compatible():
 
     # adding property in OPEN model is BACKWARD compatible
     personAddedJob = PersonAddedJob("Phineas", "Crumb", "assistant", 123)
-    producerAddedJob = create_test_producer(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_string_job_added)
+    producerAddedJob = create_test_producer_json_sr(COMMON_CLIENT_CONF, SCHEMA_REGISTRY_CONF, schema_string_job_added)
     producerAddedJob.produce(TOPIC_OPEN, key='key1', value=person_job_added_to_dict(personAddedJob), on_delivery=acked)
     producerAddedJob.flush()
     msg = consumer.poll(timeout=10.0)

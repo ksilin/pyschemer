@@ -10,6 +10,7 @@ dependencies = [
     "requests>=2.32.3",
     "jsonschema>=4.23.0",
     "testcontainers>=4.7.2",
+    "fastavro>=1.9.5",
 ]
 requires-python = "==3.12.*"
 readme = "README.md"
@@ -26,6 +27,9 @@ lint = [
 ]
 pytest = [
     "pytest-cov>=5.0.0",
+]
+dev = [
+    "pytest>=8.3.2",
 ]
 
 [tool.pdm.scripts]

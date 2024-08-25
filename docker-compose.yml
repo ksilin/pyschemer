@@ -3,7 +3,7 @@ services:
   kafka:
     #profiles:
     #  - donotstart
-    image: confluentinc/confluent-local:7.6.1
+    image: confluentinc/confluent-local:7.6.2
     hostname: kafka-pysr
     container_name: kafka-pysr
     networks:
@@ -26,9 +26,9 @@ services:
       - ./kafka_jaas.conf:/etc/kafka/kafka_jaas.conf
       
   sr:
-    image: confluentinc/cp-schema-registry:7.6.1
+    image: confluentinc/cp-schema-registry:7.6.2
     hostname: sr
-    container_name: sr
+    container_name: sr-pysr
     ports:
       - '8081:8081'
     environment:
@@ -46,9 +46,9 @@ services:
       # SCHEMA_REGISTRY_CONFLUENT_LICENSE: $CONFLUENT_LICENSE
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:7.6.1
-    hostname: control-center
-    container_name: control-center
+    image: confluentinc/cp-enterprise-control-center:7.6.2
+    hostname: c3
+    container_name: c3-pysr
     depends_on:
       - kafka
       - sr
@@ -68,7 +68,9 @@ services:
       CONTROL_CENTER_METRICS_TOPIC_REPLICATION: 1
 
   akhq:
-    image: tchiotludo/akhq
+    image: tchiotludo/akhq:0.25.1
+    hostname: akhq
+    container_name: akhq-pysr
     environment:
       AKHQ_CONFIGURATION: |
         akhq:
