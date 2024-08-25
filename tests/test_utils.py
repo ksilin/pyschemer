@@ -66,9 +66,10 @@ def create_test_producer_json_sr(producer_conf, schema_registry_conf, schema_str
 def create_test_producer_avro(producer_conf, schema_registry_conf, schema_string, to_dict=None, serializer_conf=None):
     return create_test_producer(producer_conf, schema_registry_conf, schema_string, AvroSerializer, to_dict, serializer_conf)
 
-def create_test_consumer_json_sr(client_conf, schema_registry_conf, schema_string, group_id, topic, from_dict = None):
+
+def create_test_consumer(client_conf, schema_registry_conf, schema_string, group_id, topic, deserializer_class, from_dict=None):
     schema_registry_client = SchemaRegistryClient(schema_registry_conf)
-    value_deserializer = JSONDeserializer(schema_string, from_dict, schema_registry_client)
+    value_deserializer = deserializer_class(schema_str=schema_string, schema_registry_client=schema_registry_client, from_dict=from_dict)
 
     consumer_config = copy.deepcopy(client_conf)
     consumer_config['group.id'] = group_id
@@ -79,6 +80,12 @@ def create_test_consumer_json_sr(client_conf, schema_registry_conf, schema_strin
     consumer = DeserializingConsumer(consumer_config)
     consumer.subscribe([topic])
     return consumer
+
+def create_test_consumer_json_sr(client_conf, schema_registry_conf, schema_string, group_id, topic, from_dict=None):
+    return create_test_consumer(client_conf, schema_registry_conf, schema_string, group_id, topic, JSONDeserializer, from_dict)
+
+def create_test_consumer_avro(client_conf, schema_registry_conf, schema_string, group_id, topic, from_dict=None):
+    return create_test_consumer(client_conf, schema_registry_conf, schema_string, group_id, topic, AvroDeserializer, from_dict)
 
 def delete_consumer_groups(client_conf, group_ids):
     admin_client = AdminClient(client_conf)
